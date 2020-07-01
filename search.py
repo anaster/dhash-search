@@ -6,6 +6,10 @@ import os
 import pickle
 import cv2
 
+# Обработка команд в консоли с обработкой трех обязательных параметров:
+# 1. Название папки-датасета
+# 2. Файл с индексами
+# 3. Путь к ищображению-образцу
 ap = argparse.ArgumentParser()
 ap.add_argument("-d", "--dataset", required=True,
                 help="Path to the directory that contains the images we just indexed")
@@ -22,6 +26,9 @@ queryFeatures =createDHash(args["query"])
 index = pickle.loads(open(args["index"], "rb").read())
 searcher = Searcher(index)
 results = searcher.search(queryFeatures)
+# Вывод первых 10 результатов в формате "путь файла : расстояние Хэмминга"
+# Если при поиске алгоритм нашел копию образца (расстояние Хэмминга 0)
+# Поиск считается успешным
 for j in range(0, 10):
     (score, imageName) = results[j]
     path = os.path.join(args["dataset"], imageName)
